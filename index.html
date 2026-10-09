@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RIX Store Advertisement</title>
+<style>
+html,body{margin:0;padding:0;width:100%;height:100%;background:#000;overflow:hidden}
+#screen{display:block;width:100vw;height:100vh;object-fit:contain}
+</style>
+</head>
+<body>
+<img id="screen" alt="Advertisement">
+<script>
+(function(){
+  var names=[];
+  for(var i=1;i<=20;i++){names.push('ad'+i+'.jpg');}
+  var available=[];
+  var current=0;
+  var screen=document.getElementById('screen');
+  function probe(i){
+    if(i>=names.length){
+      if(available.length){show();setInterval(show,10000);}
+      return;
+    }
+    var img=new Image();
+    img.onload=function(){available.push(names[i]);probe(i+1);};
+    img.onerror=function(){probe(i+1);};
+    img.src=names[i]+'?check='+new Date().getTime();
+  }
+  function show(){
+    if(!available.length)return;
+    screen.src=available[current]+'?v='+new Date().getTime();
+    current=(current+1)%available.length;
+  }
+  probe(0);
+  setInterval(function(){location.reload();},300000);
+})();
+</script>
+</body>
+</html>
